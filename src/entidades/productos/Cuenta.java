@@ -49,4 +49,9 @@ public abstract class Cuenta extends ProductoAbstracto {
     public void setAlias(String alias) {
         this.alias = alias;
     }
+
+    @Override
+    public String toString() {
+        return getNombre() + " (" + getCBU().substring(0, 4) + "...) - $" + getSaldo();
+    }
 }

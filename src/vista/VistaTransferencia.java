@@ -53,14 +53,14 @@ public class VistaTransferencia extends VistaAbstracta {
         gbc.insets = new Insets(5, 0, 4, 0);
         panel.add(labelOrigen, gbc);
 
-        JComboBox<String> comboCuentas = new JComboBox<>();
+        JComboBox<Cuenta> comboCuentas = new JComboBox<>();
         comboCuentas.setPreferredSize(new Dimension(0, 40));
         comboCuentas.setBackground(Color.WHITE);
         comboCuentas.setFont(new Font("Arial", Font.PLAIN, 13));
 
         for (ProductoAbstracto prod : cliente.getProductos()) {
             if (prod instanceof Cuenta cuenta) {
-                comboCuentas.addItem(cuenta.getNombre() + " (" + cuenta.getCBU().substring(0, 4) + "...) - $" + cuenta.getSaldo());
+                comboCuentas.addItem(cuenta);
             }
         }
         gbc.gridy = 3;
@@ -115,7 +115,7 @@ public class VistaTransferencia extends VistaAbstracta {
             String montoStr = txtMonto.getText().trim();
 
             try {
-                if (comboCuentas.getSelectedItem() == null) throw new DatosIncorrectos("Cuenta invalida");
+                if (comboCuentas.getSelectedIndex() == 1) throw new DatosIncorrectos("Cuenta invalida");
                 if (destino.isEmpty()) throw new DatosIncorrectos("Destino invalido");
                 if (montoStr.isEmpty()) throw new DatosIncorrectos("Monto vacio");
 
@@ -124,7 +124,7 @@ public class VistaTransferencia extends VistaAbstracta {
                     if (monto < 0) {
                         throw new DatosIncorrectos("Monto menor a 0");
                     }
-                    Cuenta origen = (Cuenta) cliente.getProductos().get(comboCuentas.getSelectedIndex());
+                    Cuenta origen = comboCuentas.getItemAt(comboCuentas.getSelectedIndex());
                     servicioTransferencias.transferir(origen, destino, monto);
 
                     labelError.setForeground(Color.GREEN);
